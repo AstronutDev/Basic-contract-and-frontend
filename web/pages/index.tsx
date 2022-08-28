@@ -4,14 +4,16 @@ import {
   JsonRpcProvider,
   JsonRpcSigner,
   Web3Provider,
+  AlchemyProvider,
 } from "@ethersproject/providers";
 import { abi } from "../aftifacts/abi.json";
 import { address } from "../aftifacts/address.json";
 import { useState } from "react";
 import { Greeter } from "../typechain-types/Greeter";
+import { Wallet } from "@ethersproject/wallet";
 
-let provider: JsonRpcProvider;
-let signer: JsonRpcSigner;
+let provider: JsonRpcProvider | AlchemyProvider;
+let signer: JsonRpcSigner | Wallet;
 let greetContract: Greeter;
 
 const Home: NextPage = () => {
@@ -21,12 +23,27 @@ const Home: NextPage = () => {
 
   const connect = async () => {
     // access metamask
-    provider = new ethers.providers.Web3Provider((window as any).ethereum);
-    await provider.send("eth_requestAccounts", []);
-    signer = provider.getSigner();
-    setAddressWallet(await signer.getAddress());
+    // provider = new ethers.providers.Web3Provider((window as any).ethereum);
 
     //custome
+    // const url = process.env.ALCHEMY_URL
+    // provider = new ethers.providers.JsonRpcProvider(url);
+    // await provider.send("eth_requestAccounts", []);
+
+    //custom by alchemy
+    // AlchemyProvider('network', 'api_key')
+    const url = new ethers.providers.AlchemyProvider(
+      "rinkeby",
+      process.env.NEXT_PUBLIC_ALCHEMY_API_KEY
+    );
+    const wallet = new ethers.Wallet(
+      process.env.NEXT_PUBLIC_PRIVATE_KEY!,
+      provider
+    );
+    signer = wallet.connect(provider);
+
+    // signer = provider.getSigner();
+    setAddressWallet(await signer.getAddress());
 
     greetContract = new ethers.Contract(address, abi, signer) as Greeter;
   };

@@ -1,8 +1,9 @@
 import { HardhatUserConfig, task } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
+require("dotenv").config();
 
 task("heelo", async () => {
-  console.log("hello world");
+  console.log("hello world", process.env.PRIVATE_KEY);
 });
 
 const config: HardhatUserConfig = {
@@ -11,6 +12,10 @@ const config: HardhatUserConfig = {
     localhost: {
       url: "http://localhost:8545",
       chainId: 31337,
+    },
+    rinkeby: {
+      url: process.env.ALCHEMY_URL,
+      accounts: [process.env.PRIVATE_KEY!],
     },
   },
 };
