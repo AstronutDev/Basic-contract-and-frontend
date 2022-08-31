@@ -24,4 +24,11 @@ contract Greeter {
         require(x > 0, "not negative or zero");
         return "foo";
     }
+
+    function donate () external payable {
+    }
+
+    function balance() external view returns (uint) {
+        return address(this).balance;
+    }
 }

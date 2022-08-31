@@ -9,7 +9,6 @@ import type {
   CallOverrides,
   ContractTransaction,
   Overrides,
-  PayableOverrides,
   PopulatedTransaction,
   Signer,
   utils,
@@ -26,24 +25,15 @@ import type {
 
 export interface GreeterInterface extends utils.Interface {
   functions: {
-    "balance()": FunctionFragment;
-    "donate()": FunctionFragment;
     "foo(int256)": FunctionFragment;
     "greet()": FunctionFragment;
     "setGreeting(string)": FunctionFragment;
   };
 
   getFunction(
-    nameOrSignatureOrTopic:
-      | "balance"
-      | "donate"
-      | "foo"
-      | "greet"
-      | "setGreeting"
+    nameOrSignatureOrTopic: "foo" | "greet" | "setGreeting"
   ): FunctionFragment;
 
-  encodeFunctionData(functionFragment: "balance", values?: undefined): string;
-  encodeFunctionData(functionFragment: "donate", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "foo",
     values: [PromiseOrValue<BigNumberish>]
@@ -54,8 +44,6 @@ export interface GreeterInterface extends utils.Interface {
     values: [PromiseOrValue<string>]
   ): string;
 
-  decodeFunctionResult(functionFragment: "balance", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "donate", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "foo", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "greet", data: BytesLike): Result;
   decodeFunctionResult(
@@ -93,12 +81,6 @@ export interface Greeter extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
-    balance(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    donate(
-      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
     foo(
       x: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -111,12 +93,6 @@ export interface Greeter extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
   };
-
-  balance(overrides?: CallOverrides): Promise<BigNumber>;
-
-  donate(
-    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
 
   foo(
     x: PromiseOrValue<BigNumberish>,
@@ -131,10 +107,6 @@ export interface Greeter extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    balance(overrides?: CallOverrides): Promise<BigNumber>;
-
-    donate(overrides?: CallOverrides): Promise<void>;
-
     foo(
       x: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -151,12 +123,6 @@ export interface Greeter extends BaseContract {
   filters: {};
 
   estimateGas: {
-    balance(overrides?: CallOverrides): Promise<BigNumber>;
-
-    donate(
-      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
     foo(
       x: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -171,12 +137,6 @@ export interface Greeter extends BaseContract {
   };
 
   populateTransaction: {
-    balance(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    donate(
-      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
     foo(
       x: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
