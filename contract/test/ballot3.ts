@@ -42,9 +42,9 @@ describe("Ballot3", () => {
     // 8 -> 4 result 4 -> 7 (due to previosuly delegate)
     await ballot3.connect(accounts[8]).delegate(accounts[4].address);
 
-    await ballot3.connect(accounts[2]).vote(1);
+    await ballot3.connect(accounts[2]).vote(0);
     await ballot3.connect(accounts[3]).vote(1);
-    // await ballot3.connect(accounts[7]).vote(1);
+    await ballot3.connect(accounts[7]).vote(2);
 
     const winer32 = await ballot3.winerName();
     const winer = ethers.utils.parseBytes32String(winer32);
