@@ -1,5 +1,5 @@
 import { artifacts, ethers } from "hardhat";
-import { Greeter } from "../typechain-types";
+import { Ballot3, Greeter } from "../typechain-types";
 import fs from "fs";
 
 async function main() {
@@ -16,14 +16,24 @@ async function main() {
 
   // console.log(`Lock with 1 ETH and unlock timestamp ${unlockTime} deployed to ${lock.address}`);
 
-  const Greet = await ethers.getContractFactory("Greeter");
-  const greeter = await Greet.deploy("Hello, Hardhat!");
-  console.log(`greet deploy at:`, greeter.address);
-  await greeter.deployed();
-  saveContract(greeter as Greeter);
+  const Ballot3 = await ethers.getContractFactory("Ballot3");
+
+  const names = ["Kyogre", "Groudon", "Rayquaza"];
+  const proposalNames = [];
+  for (let index in names) {
+    //convert string to byte32
+    let p = ethers.utils.formatBytes32String(names[index]);
+
+    proposalNames.push(p);
+  }
+
+  const ballot3 = await Ballot3.deploy(proposalNames);
+  console.log(`Ballot3 deploy at:`, ballot3.address);
+  await ballot3.deployed();
+  saveContract(ballot3 as Ballot3);
 }
 
-const saveContract = (greeter: Greeter) => {
+const saveContract = (ballot3: Ballot3) => {
   const path = __dirname + "/../savecontract";
   if (!fs.existsSync(path)) {
     fs.mkdirSync(path);
@@ -33,7 +43,7 @@ const saveContract = (greeter: Greeter) => {
     `${path}/address.json`,
     JSON.stringify(
       {
-        address: greeter.address,
+        address: ballot3.address,
       },
       undefined,
       2
@@ -42,7 +52,7 @@ const saveContract = (greeter: Greeter) => {
   //abi
   fs.writeFileSync(
     `${path}/abi.json`,
-    JSON.stringify(artifacts.readArtifactSync("Greeter"), undefined, 2)
+    JSON.stringify(artifacts.readArtifactSync("Ballot3"), undefined, 2)
   );
 };
 

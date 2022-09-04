@@ -5,6 +5,7 @@ let provider: Web3Provider | JsonRpcProvider;
 
 export const getProvider = async () => {
   if (window.ethereum) {
+    console.log("here1");
     provider = new ethers.providers.Web3Provider(window.ethereum);
     await provider.send("eth_requestAccounts", []);
     return provider;
